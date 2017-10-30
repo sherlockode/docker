@@ -1,4 +1,4 @@
-FROM debian:jessie
+FROM debian:stretch
 
 # Heavily inspired by CenturyLinkLabs Dockerfiles
 MAINTAINER  Click & Mortar <contact@clickandmortar.fr>
@@ -6,19 +6,19 @@ MAINTAINER  Click & Mortar <contact@clickandmortar.fr>
 # Install packages
 RUN LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get update && \
  LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get -y install ca-certificates curl git netcat supervisor tar vim wget && \
- LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get -y install apache2 libapache2-mod-php5 php5-mysql php5-intl php5-mcrypt php5-gd php-pear php-apc php5-apcu php5-xsl php5-cli php5-curl && \
+ LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get -y install apache2 libapache2-mod-php php-mysql php-intl php-mcrypt php-gd php-pear php-apcu php-xsl php-cli php-curl && \
  LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get autoremove -y && apt-get clean && rm -r /var/lib/apt/lists/* && \
  curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # PHP configuration
- RUN sed -i "s/;date.timezone =.*/date.timezone = UTC/" /etc/php5/apache2/php.ini /etc/php5/cli/php.ini && \
+ RUN sed -i "s/;date.timezone =.*/date.timezone = UTC/" /etc/php/7.0/apache2/php.ini /etc/php/7.0/cli/php.ini && \
      sed -i -e  's/post_max_size = 8M/post_max_size = 16M/g' \
      -e 's/upload_max_filesize = 2M/upload_max_filesize = 16M/g' \
      -e 's/error_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT/error_reporting = E_ALL/g' \
      -e 's/display_errors = Off/display_errors = On/' \
      -e "s/max_execution_time = 30/max_execution_time = 300/" \
      -e "s/max_input_time = 60/max_input_time = 300/" \
-     -e "s/memory_limit = 128M/memory_limit = 1024M/" /etc/php5/apache2/php.ini
+     -e "s/memory_limit = 128M/memory_limit = 1024M/" /etc/php/7.0/apache2/php.ini
 
 # Override default Apache conf
 ADD apache-vhost.conf /etc/apache2/sites-available/000-default.conf
