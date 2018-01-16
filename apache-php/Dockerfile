@@ -6,7 +6,7 @@ MAINTAINER  Click & Mortar <contact@clickandmortar.fr>
 # Install packages
 RUN LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get update && \
  LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get -y install ca-certificates curl git netcat supervisor tar vim wget && \
- LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get -y install apache2 libapache2-mod-php php-mysql php-intl php-mcrypt php-gd php-pear php-apcu php-xsl php-cli php-curl && \
+ LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get -y install apache2 libapache2-mod-php php-mysql php-intl php-mcrypt php-gd php-pear php-apcu php-xsl php-cli php-curl php-xdebug && \
  LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get autoremove -y && apt-get clean && rm -r /var/lib/apt/lists/* && \
  curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
@@ -31,6 +31,7 @@ ADD apache2.sh /apache2.sh
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod 755 /*.sh
 ADD supervisord-apache2.conf /etc/supervisor/conf.d/supervisord-apache2.conf
+ADD xdebug.ini /etc/php/7.0/apache2/conf.d/20-xdebug.ini
 
 # Expose HTTP
 EXPOSE 80
